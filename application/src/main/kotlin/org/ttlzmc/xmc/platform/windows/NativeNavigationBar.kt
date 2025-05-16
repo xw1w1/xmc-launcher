@@ -11,13 +11,13 @@ import org.ttlzmc.xmc.themes.beans.ThemeConfiguration
 import xmc.fluentlib.Windows
 import java.io.File
 
-class NativeNavigationBar(scene: Scene) : NavigationBar(scene, null), Styled {
+class NativeNavigationBar(scene: Scene) : NavigationBar(scene) {
 
     init {
         Styled.registerStyled(this)
         this.widthProperty().addListener( InvalidationListener {
-            val reservedButtonArea = (((30 * 3) + (5 * 2)) * Screen.getPrimary().outputScaleX).toInt()
-            this.updateGrabArea(reservedButtonArea, this.scene.width.toInt(), this.prefHeight.toInt())
+            val scale = Screen.getPrimary().outputScaleX.toInt()
+            this.updateGrabArea(40 * scale, this.scene.width.toInt() - 200 * scale, 30 * scale)
         })
     }
 
@@ -29,12 +29,4 @@ class NativeNavigationBar(scene: Scene) : NavigationBar(scene, null), Styled {
         val currentScale = Screen.getPrimary().outputScaleX
         Windows.setDragArea(startX, endX, height, currentScale)
     }
-
-    override fun applyStyle(configuration: ThemeConfiguration) {
-        this.stylesheets.clear()
-        this.styleClass.clear()
-        this.stylesheets.add(File(XMCConstants.LAUNCHER_HOME_DIRECTORY, configuration.cssFilePath).toURI().toString())
-        this.styleClass.add("native-navbar")
-    }
-
 }

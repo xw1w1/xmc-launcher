@@ -1,7 +1,7 @@
 package org.ttlzmc.xmc
 
-import com.google.gson.Gson
 import com.google.gson.GsonBuilder
+import com.google.gson.JsonParser
 import com.google.gson.JsonSyntaxException
 import com.google.gson.reflect.TypeToken
 import javafx.scene.paint.Color
@@ -21,6 +21,7 @@ object AssetDownloader {
     val FIRST_RUN_FLAG = File(LAUNCHER_HOME_DIRECTORY, ".xmc")
 
     val THEMES_FOLDER = File(LAUNCHER_ASSETS_DIRECTORY, "themes")
+    val IMAGES_FOLDER = File(LAUNCHER_ASSETS_DIRECTORY, "images")
     val TRANSLATIONS_FOLDER = File(LAUNCHER_ASSETS_DIRECTORY, "translations")
     val PREFERENCES = File(LAUNCHER_CONFIGS_DIRECTORY, "launcher.json")
 
@@ -33,15 +34,15 @@ object AssetDownloader {
 
     fun isFirstRun(): Boolean = !FIRST_RUN_FLAG.exists()
 
-    fun downloadAssets() {
+    fun checkUpdates() {
         createEssentialFolders()
         if (isFirstRun()) {
             FIRST_RUN_FLAG.createNewFile()
         }
-        checkUpdates()
+        downloadAssets()
     }
 
-    fun checkUpdates() {
+    fun downloadAssets() {
         try {
             createEssentialFolders()
 
@@ -56,7 +57,7 @@ object AssetDownloader {
             val categoryIndexes = listOf(
                 index.themes to "themes",
                 index.translations to "translations",
-                index.libraries to "libraries"
+                index.images to "images"
             )
 
             categoryIndexes.forEach { (categoryPath, categoryType) ->
@@ -102,6 +103,7 @@ object AssetDownloader {
             LAUNCHER_HOME_DIRECTORY,
             LAUNCHER_CONFIGS_DIRECTORY,
             THEMES_FOLDER,
+            IMAGES_FOLDER,
             TRANSLATIONS_FOLDER
         ).forEach { it.mkdirs() }
     }
@@ -117,6 +119,10 @@ object AssetDownloader {
                 val type = object : TypeToken<Map<String, Language>>() {}.type
                 gson.fromJson<Map<String, Language>>(jsonContent, type)
                     .values.map { it.translationsFilePath }
+            }
+            "images" -> {
+                val json = JsonParser.parseString(jsonContent).asJsonObject
+                json.entrySet().map { it.value.asString }
             }
             else -> emptyList()
         }.also { list ->
@@ -138,9 +144,9 @@ object AssetDownloader {
                             input.copyTo(output)
                         }
                     }
-                    println("Successfully downloaded: ${destFile.path}")
+                    println("Resource downloaded [$url]")
                 } else {
-                    println("Failed to download $url: HTTP $responseCode")
+                    println("Online resource at $url not found: [HTTP $responseCode]")
                 }
                 disconnect()
             }
@@ -156,7 +162,7 @@ object AssetDownloader {
                 if (responseCode == HttpURLConnection.HTTP_OK) {
                     return inputStream.bufferedReader().readText()
                 }
-                throw RuntimeException("Failed to download from $url: HTTP $responseCode")
+                throw RuntimeException("Online resource at $url not found: [HTTP $responseCode]")
             } finally {
                 disconnect()
             }

@@ -8,6 +8,11 @@ import javafx.scene.Scene
 import javafx.scene.image.ImageView
 import javafx.scene.input.MouseEvent
 import javafx.scene.layout.HBox
+import org.ttlzmc.xmc.Assets
+import org.ttlzmc.xmc.platform.XMCConstants
+import org.ttlzmc.xmc.themes.beans.Styled
+import org.ttlzmc.xmc.themes.beans.ThemeConfiguration
+import java.io.File
 
 /**
  * A custom top navigation bar implementation that extends the standard Windows window header.
@@ -27,17 +32,18 @@ import javafx.scene.layout.HBox
  */
 @Suppress("MemberVisibilityCanBePrivate")
 abstract class NavigationBar (
-    rootScene: Scene,
-    val appIcon: ImageView? = null,
-) : HBox() {
+    rootScene: Scene
+) : HBox(), Styled {
     val offsetXProperty = ReadOnlyDoubleWrapper(0.0)
     val offsetYProperty = ReadOnlyDoubleWrapper(0.0)
 
+    val appIcon = Assets.getIconResource()
+
     init {
-        this.alignment = Pos.TOP_RIGHT
+        this.alignment = Pos.CENTER_LEFT
         this.appIcon?.apply {
-            fitWidth = 50.0
-            fitHeight = 50.0
+            fitWidth = 40.0
+            fitHeight = 40.0
             pickOnBoundsProperty().set(true)
             preserveRatioProperty().set(true)
             this@NavigationBar.children.add(this)
@@ -57,13 +63,20 @@ abstract class NavigationBar (
         return this.offsetYProperty.readOnlyProperty
     }
 
+    override fun applyStyle(configuration: ThemeConfiguration) {
+        this.stylesheets.clear()
+        this.styleClass.clear()
+        this.stylesheets.add(File(XMCConstants.LAUNCHER_HOME_DIRECTORY, configuration.cssFilePath).toURI().toString())
+        this.styleClass.add("native-navbar")
+    }
+
     abstract fun onMouseClicked(event: MouseEvent)
 
     abstract fun onMouseDragged(event: MouseEvent)
 
     companion object {
         const val SPACING = 5.0
-        val PADDING = Insets(12.0, 15.0, 10.0, 10.0)
+        val PADDING = Insets(0.0, 0.0, 0.0, 10.0)
         const val INITIAL_PREF_HEIGHT = 60.0
     }
 }

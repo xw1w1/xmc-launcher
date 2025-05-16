@@ -8,6 +8,7 @@ javafx = "24.0.1"
 jna = "5.13.0"
 jupiter = "5.13.0-M2"
 gson = "2.13.1"
+xmc = "1.1"
 
 [libraries]
 kotlinGradlePlugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }

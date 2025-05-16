@@ -1,17 +1,35 @@
 package org.ttlzmc.xmc.platform.linux
 
+import javafx.geometry.Insets
+import javafx.scene.effect.InnerShadow
+import javafx.scene.layout.Background
+import javafx.scene.layout.BackgroundFill
+import javafx.scene.layout.CornerRadii
 import javafx.stage.Stage
 import javafx.stage.StageStyle
 import org.ttlzmc.xmc.launcher.PlatformApplication
+import org.ttlzmc.xmc.platform.windows.NativeNavigationBar
+import org.ttlzmc.xmc.themes.beans.Styled
+import org.ttlzmc.xmc.themes.beans.ThemeConfiguration
 
 class LinuxApplication : PlatformApplication() {
 
     override fun onStageCreated(stage: Stage) {
-        stage.title = "fluentapp"
-        stage.initStyle(StageStyle.UNIFIED)
-        stage.scene = rootScene
-        root.children.add(DraggableNavigationBar(rootScene))
-        stage.requestFocus()
-        stage.show()
+        Styled.registerStyled(this)
+        stage.apply {
+            scene = rootScene
+            root.children.add(NativeNavigationBar(rootScene))
+            initStyle(StageStyle.UNIFIED)
+            requestFocus()
+            show()
+        }
+    }
+
+    override fun applyStyle(configuration: ThemeConfiguration) {
+        pageRoot.apply {
+            background =
+                Background(BackgroundFill(configuration.backgroundSubColor, CornerRadii(15.0, 0.0, 0.0, 0.0, false), Insets.EMPTY))
+            effect = InnerShadow(10.0, configuration.shadowColor)
+        }
     }
 }

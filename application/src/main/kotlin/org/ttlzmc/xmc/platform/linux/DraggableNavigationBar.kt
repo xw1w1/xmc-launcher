@@ -5,10 +5,12 @@ import javafx.scene.input.MouseButton
 import javafx.scene.input.MouseEvent
 import javafx.stage.Stage
 import org.ttlzmc.xmc.launcher.NavigationBar
+import org.ttlzmc.xmc.themes.beans.Styled
 
-class DraggableNavigationBar(scene: Scene) : NavigationBar(scene, null) {
+class DraggableNavigationBar(scene: Scene) : NavigationBar(scene) {
 
     init {
+        Styled.registerStyled(this)
         this.setOnMousePressed {
             this.offsetXProperty.set(it.sceneX)
             this.offsetYProperty.set(it.sceneY)

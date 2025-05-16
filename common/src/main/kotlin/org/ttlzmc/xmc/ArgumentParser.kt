@@ -24,6 +24,13 @@ object ArgumentParser {
             }
             i++
         }
+        println("""
+            Parsed ${arguments.size} arguments and ${flags.size}: 
+            Arguments:
+            $arguments
+            Flags:
+            $flags
+        """.trimIndent())
         return ParsedRunArgs(arguments, flags)
     }
 

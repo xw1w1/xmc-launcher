@@ -4,8 +4,6 @@ plugins {
     id("com.gradleup.shadow")
 }
 
-version = project.property("xmc.version").toString()
-
 javafx {
     modules = listOf("javafx.controls")
     version = libs.versions.javafx.get()

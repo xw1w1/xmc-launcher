@@ -8,7 +8,6 @@ import javafx.scene.layout.CornerRadii
 import javafx.stage.Stage
 import javafx.stage.StageStyle
 import org.ttlzmc.xmc.launcher.PlatformApplication
-import org.ttlzmc.xmc.platform.windows.NativeNavigationBar
 import org.ttlzmc.xmc.themes.beans.Styled
 import org.ttlzmc.xmc.themes.beans.ThemeConfiguration
 
@@ -18,11 +17,17 @@ class LinuxApplication : PlatformApplication() {
         Styled.registerStyled(this)
         stage.apply {
             scene = rootScene
-            root.children.add(NativeNavigationBar(rootScene))
+            navigationBar = DraggableNavigationBar(rootScene)
+            root.children.add(navigationBar)
             initStyle(StageStyle.UNIFIED)
             requestFocus()
             show()
         }
+    }
+
+    override fun onMaximizedStateChanges(fs: Boolean) {
+        navigationBar.onMaximized(fs)
+        attachElementsToAnchor(fs)
     }
 
     override fun applyStyle(configuration: ThemeConfiguration) {

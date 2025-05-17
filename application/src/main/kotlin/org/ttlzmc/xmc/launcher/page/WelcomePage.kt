@@ -6,6 +6,7 @@ import javafx.scene.control.Label
 import javafx.scene.paint.Color
 import javafx.scene.text.Font
 import javafx.scene.text.FontWeight
+import org.ttlzmc.xmc.launcher.ThemeManager
 
 object WelcomePage : UIPage() {
 
@@ -19,7 +20,7 @@ object WelcomePage : UIPage() {
     }
 
     fun createThemesBox() {
-
+        val themes = ThemeManager.getHandle().getAllThemes()
     }
 
     override fun applyStyle(configuration: ThemeConfiguration) {

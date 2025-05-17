@@ -5,11 +5,8 @@ import javafx.scene.Scene
 import javafx.scene.input.MouseEvent
 import javafx.stage.Screen
 import org.ttlzmc.xmc.launcher.NavigationBar
-import org.ttlzmc.xmc.platform.XMCConstants
 import org.ttlzmc.xmc.themes.beans.Styled
-import org.ttlzmc.xmc.themes.beans.ThemeConfiguration
 import xmc.fluentlib.Windows
-import java.io.File
 
 class NativeNavigationBar(scene: Scene) : NavigationBar(scene) {
 

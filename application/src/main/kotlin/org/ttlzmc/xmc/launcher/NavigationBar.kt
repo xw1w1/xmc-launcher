@@ -55,6 +55,10 @@ abstract class NavigationBar (
         this.prefWidthProperty().bind(rootScene.widthProperty())
     }
 
+    fun onMaximized(fs: Boolean) {
+        this.padding = if (fs) PADDING_MAXIMIZED else PADDING
+    }
+
     fun offsetXProperty(): ReadOnlyDoubleProperty {
         return this.offsetXProperty.readOnlyProperty
     }
@@ -67,7 +71,7 @@ abstract class NavigationBar (
         this.stylesheets.clear()
         this.styleClass.clear()
         this.stylesheets.add(File(XMCConstants.LAUNCHER_HOME_DIRECTORY, configuration.cssFilePath).toURI().toString())
-        this.styleClass.add("native-navbar")
+        this.styleClass.add("navbar")
     }
 
     abstract fun onMouseClicked(event: MouseEvent)
@@ -77,6 +81,7 @@ abstract class NavigationBar (
     companion object {
         const val SPACING = 5.0
         val PADDING = Insets(0.0, 0.0, 0.0, 10.0)
+        val PADDING_MAXIMIZED = Insets(10.0, 0.0, 0.0, 10.0)
         const val INITIAL_PREF_HEIGHT = 60.0
     }
 }

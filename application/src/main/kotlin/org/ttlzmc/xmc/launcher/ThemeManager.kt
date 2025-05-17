@@ -22,4 +22,8 @@ object ThemeManager {
     fun getLauncherTheme(): Theme {
         return internalThemeManager.getCurrentTheme()!!
     }
+
+    fun getHandle() : ThemeManager {
+        return this.internalThemeManager
+    }
 }

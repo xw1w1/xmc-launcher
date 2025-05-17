@@ -16,33 +16,26 @@ import javafx.scene.paint.Color
 import javafx.scene.shape.Rectangle
 import javafx.scene.text.Font
 import javafx.scene.text.FontWeight
-
 import javafx.util.Duration
+
 import org.ttlzmc.xmc.themes.beans.Styled
 import org.ttlzmc.xmc.themes.beans.ThemeConfiguration
 
-abstract class Modal(width: Double, height: Double) : AnchorPane(), Styled {
+abstract class Modal(
+    width: Double,
+    height: Double
+) : AnchorPane(), Styled {
+
     private val backdrop = Rectangle().apply {
         fill = Color.rgb(0, 0, 0, 0.5)
         widthProperty().bind(this@Modal.prefWidthProperty())
         heightProperty().bind(this@Modal.prefHeightProperty())
     }
-
     private val contentContainer = VBox(20.0).apply {
         alignment = Pos.TOP_CENTER
         maxWidthProperty().set(width)
         maxHeightProperty().set(height)
         padding = Insets(5.0)
-    }
-
-    override fun applyStyle(configuration: ThemeConfiguration) {
-        this.contentContainer.style = """
-            -fx-background-color: #161616;
-            -fx-background-radius: 15;
-            -fx-border-color: #404040;
-            -fx-border-radius: 15;
-            -fx-effect: dropshadow(gaussian, rgba(10,10,10,10.5), 25, 0.2, 0, 5);
-        """.trimIndent()
     }
 
     init {
@@ -93,6 +86,16 @@ abstract class Modal(width: Double, height: Double) : AnchorPane(), Styled {
         }
         this.children.add(header)
         setTopAnchor(header, 0.0)
+    }
+
+    override fun applyStyle(configuration: ThemeConfiguration) {
+        this.contentContainer.style = """
+            -fx-background-color: #161616;
+            -fx-background-radius: 15;
+            -fx-border-color: #404040;
+            -fx-border-radius: 15;
+            -fx-effect: dropshadow(gaussian, rgba(10,10,10,10.5), 25, 0.2, 0, 5);
+        """.trimIndent()
     }
 
     fun open() {

@@ -20,11 +20,17 @@ class WindowsApplication : PlatformApplication() {
         Styled.registerStyled(this)
         stage.apply {
             scene = rootScene
-            root.children.add(NativeNavigationBar(rootScene))
+            navigationBar = NativeNavigationBar(rootScene)
+            root.children.add(navigationBar)
             initStyle(StageStyle.UNIFIED)
             requestFocus()
             show()
         }.also { Styled.notifyThemeChanged(ThemeManager.getLauncherTheme()) }
+    }
+
+    override fun onMaximizedStateChanges(fs: Boolean) {
+        navigationBar.onMaximized(fs)
+        attachElementsToAnchor(fs)
     }
 
     override fun applyStyle(configuration: ThemeConfiguration) {

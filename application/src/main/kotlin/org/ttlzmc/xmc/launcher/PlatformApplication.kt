@@ -1,6 +1,7 @@
 package org.ttlzmc.xmc.launcher
 
 import javafx.application.Application
+import javafx.beans.InvalidationListener
 import javafx.geometry.Insets
 import javafx.geometry.Pos
 import javafx.scene.Scene
@@ -18,10 +19,14 @@ abstract class PlatformApplication : Application(), Styled {
         stage.title = "xmc Launcher"
         this.onStageCreated(stage)
         this.openPage(WelcomePage)
-        attachElementsToAnchor()
+        attachElementsToAnchor(false)
+        rootStage.maximizedProperty().addListener { _, _, new ->
+            this.onMaximizedStateChanges(new)
+        }
     }
 
     abstract fun onStageCreated(stage: Stage)
+    abstract fun onMaximizedStateChanges(fs: Boolean)
 
     fun openModal(modal: Modal) {
         root.children.add(modal)
@@ -41,6 +46,7 @@ abstract class PlatformApplication : Application(), Styled {
     companion object {
         lateinit var rootStage: Stage
         lateinit var arguments: ArgumentParser.ParsedRunArgs
+        lateinit var navigationBar: NavigationBar
 
         val pageRoot: HBox = HBox().apply {
             alignment = Pos.TOP_LEFT
@@ -49,14 +55,16 @@ abstract class PlatformApplication : Application(), Styled {
         }
 
         val root: AnchorPane = AnchorPane().apply {
+            background =
+                Background(BackgroundFill(Color.TRANSPARENT, CornerRadii.EMPTY, Insets.EMPTY))
             children.add(pageRoot)
         }
 
         val rootScene: Scene = Scene(root, 800.0, 500.0).also { it.fill = Color.TRANSPARENT }
 
-        private fun attachElementsToAnchor() {
-            AnchorPane.setTopAnchor(pageRoot, 70.0)
-            AnchorPane.setLeftAnchor(pageRoot, 50.0)
+        fun attachElementsToAnchor(fs: Boolean) {
+            AnchorPane.setTopAnchor(pageRoot, if (fs) 35.0 else 30.0)
+            AnchorPane.setLeftAnchor(pageRoot, 60.0)
             AnchorPane.setBottomAnchor(pageRoot, 0.0)
             AnchorPane.setRightAnchor(pageRoot, 0.0)
         }

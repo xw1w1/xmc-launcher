@@ -44,6 +44,11 @@ object I18n {
     fun translate(key: String, vararg args: Any): String {
         val cache = translationsCache[usedLanguage] ?: return key
         val translation = cache.get(key) ?: return key
-        return translation.asString.format(args)
+        val regex = Regex("\\{(\\d+)}")
+        val formattedString = regex.replace(translation.asString) { match ->
+            val index = match.groupValues[1].toInt()
+            "%${index + 1}\$s"
+        }
+        return formattedString.format(formattedString, *args)
     }
 }

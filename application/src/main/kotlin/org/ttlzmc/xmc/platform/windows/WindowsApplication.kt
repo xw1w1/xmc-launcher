@@ -5,18 +5,21 @@ import javafx.scene.effect.InnerShadow
 import javafx.scene.layout.Background
 import javafx.scene.layout.BackgroundFill
 import javafx.scene.layout.CornerRadii
-import javafx.scene.paint.Color
 import javafx.stage.Stage
 import javafx.stage.StageStyle
 import org.ttlzmc.xmc.launcher.PlatformApplication
-import org.ttlzmc.xmc.launcher.ThemeManager
+import org.ttlzmc.xmc.platform.XMCConstants
 import org.ttlzmc.xmc.themes.beans.Styled
 import org.ttlzmc.xmc.themes.beans.ThemeConfiguration
 import xmc.fluentlib.dwm.WindowHandle
+import java.io.File
 
 class WindowsApplication : PlatformApplication() {
 
+    private var nativeHandle: WindowHandle? = null
+
     override fun onStageCreated(stage: Stage) {
+        instance = this
         Styled.registerStyled(this)
         stage.apply {
             scene = rootScene
@@ -25,7 +28,12 @@ class WindowsApplication : PlatformApplication() {
             initStyle(StageStyle.UNIFIED)
             requestFocus()
             show()
-        }.also { Styled.notifyThemeChanged(ThemeManager.getLauncherTheme()) }
+        }
+        nativeHandle = WindowHandle(rootStage)
+    }
+
+    override fun applyNativeDecorations(stage: Stage) {
+        nativeHandle?.setHeaderBar(true)
     }
 
     override fun onMaximizedStateChanges(fs: Boolean) {
@@ -34,21 +42,32 @@ class WindowsApplication : PlatformApplication() {
     }
 
     override fun applyStyle(configuration: ThemeConfiguration) {
-        val handle = WindowHandle(rootStage)
-        handle.setHeaderBar(true)
-        handle.setDarkMode(configuration.isDarkTheme)
-        if (configuration.useMica) {
-            handle.setMica(true)
-            rootScene.fill = Color.TRANSPARENT
-        } else {
-            handle.setCaptionColor(configuration.backgroundFillColor)
+        nativeHandle?.apply {
+            this.setDarkMode(configuration.isDarkTheme)
+            if (configuration.useMica) {
+                this.setMica(true)
+                this.resetCaptionColor()
+            } else {
+                this.setMica(false)
+                this.setCaptionColor(configuration.headerFillColor)
+            }
         }
 
         pageRoot.apply {
             background =
-                Background(BackgroundFill(configuration.backgroundSubColor, CornerRadii(15.0, 0.0, 0.0, 0.0, false), Insets.EMPTY))
+                Background(
+                    BackgroundFill(
+                        configuration.backgroundSubColor,
+                        CornerRadii(15.0, 0.0, 0.0, 0.0, false),
+                        Insets.EMPTY
+                    )
+                )
             effect = InnerShadow(10.0, configuration.shadowColor)
         }
+        rootScene.root.stylesheets.clear()
+        rootScene.root.stylesheets.add(
+            File(XMCConstants.LAUNCHER_HOME_DIRECTORY, configuration.cssFilePath).toURI().toString()
+        )
     }
 
 }

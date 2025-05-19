@@ -85,7 +85,7 @@ object FluentLib {
         setHeaderBar(hWnd, useHeaderBar)
     }
 
-    private fun setHeaderBar(hWnd: HWND, useHeaderBar: Boolean) {
+    fun setHeaderBar(hWnd: HWND, useHeaderBar: Boolean) {
         if (useHeaderBar) {
             val proc: WinUser.WindowProc = CustomWndProc()
             val orig: WinUser.WindowProc? = User32.INSTANCE.SetWindowLongPtrW(

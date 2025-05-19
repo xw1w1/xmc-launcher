@@ -5,10 +5,13 @@ import javafx.beans.property.ReadOnlyDoubleWrapper
 import javafx.geometry.Insets
 import javafx.geometry.Pos
 import javafx.scene.Scene
+import javafx.scene.control.Button
+import javafx.scene.control.Tooltip
 import javafx.scene.image.ImageView
 import javafx.scene.input.MouseEvent
 import javafx.scene.layout.HBox
 import org.ttlzmc.xmc.Assets
+import org.ttlzmc.xmc.launcher.page.HomePage
 import org.ttlzmc.xmc.platform.XMCConstants
 import org.ttlzmc.xmc.themes.beans.Styled
 import org.ttlzmc.xmc.themes.beans.ThemeConfiguration
@@ -37,17 +40,30 @@ abstract class NavigationBar (
     val offsetXProperty = ReadOnlyDoubleWrapper(0.0)
     val offsetYProperty = ReadOnlyDoubleWrapper(0.0)
 
-    val appIcon = Assets.getIconResource()
+    val homeButton = Assets.getIconResource()?.run {
+        Button().apply {
+            graphic = this@run.apply {
+                fitWidth = 35.0
+                fitHeight = 35.0
+            }
+
+            maxWidth = 45.0
+            maxHeight = 45.0
+            pickOnBoundsProperty().set(true)
+            preserveRatioProperty().set(true)
+        }
+    }
 
     init {
         this.alignment = Pos.CENTER_LEFT
-        this.appIcon?.apply {
-            fitWidth = 40.0
-            fitHeight = 40.0
-            pickOnBoundsProperty().set(true)
-            preserveRatioProperty().set(true)
+        this.homeButton?.run {
             this@NavigationBar.children.add(this)
+            this.setOnAction {
+                PlatformApplication.instance.openPage(HomePage)
+            }
+            this.tooltip = Tooltip("Press to go Home")
         }
+
         this.padding = PADDING
         this.spacing = SPACING
 
@@ -68,10 +84,11 @@ abstract class NavigationBar (
     }
 
     override fun applyStyle(configuration: ThemeConfiguration) {
-        this.stylesheets.clear()
-        this.styleClass.clear()
-        this.stylesheets.add(File(XMCConstants.LAUNCHER_HOME_DIRECTORY, configuration.cssFilePath).toURI().toString())
         this.styleClass.add("navbar")
+
+        this.homeButton?.apply {
+            styleClass.add("home-button")
+        }
     }
 
     abstract fun onMouseClicked(event: MouseEvent)
@@ -80,8 +97,8 @@ abstract class NavigationBar (
 
     companion object {
         const val SPACING = 5.0
-        val PADDING = Insets(0.0, 0.0, 0.0, 10.0)
-        val PADDING_MAXIMIZED = Insets(10.0, 0.0, 0.0, 10.0)
+        val PADDING = Insets(0.0, 0.0, 0.0, 7.5)
+        val PADDING_MAXIMIZED = Insets(10.0, 0.0, 0.0, 7.5)
         const val INITIAL_PREF_HEIGHT = 60.0
     }
 }

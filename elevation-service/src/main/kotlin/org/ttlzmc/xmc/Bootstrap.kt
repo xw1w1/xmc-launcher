@@ -40,7 +40,7 @@ object Bootstrap {
         ThemeManager.initialize()
 
         System.setProperty("javafx.animation.fullspeed", "true")
-        System.setProperty("prism.lcdtext", "false")
+        //System.setProperty("prism.lcdtext", "false")
         System.setProperty("prism.forceUploadingPainter", "true")
 
         var launcherClassName: Class<PlatformApplication>? = null

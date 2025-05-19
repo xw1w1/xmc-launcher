@@ -10,6 +10,7 @@ data class ThemeConfiguration(
     @SerializedName("cssFilePath") val cssFilePath: String,
     // ThemeContainer:
     @SerializedName("backgroundFillColor") val backgroundFillColor: Color,
+    @SerializedName("headerFillColor") val headerFillColor: Color,
     @SerializedName("backgroundSubColor") val backgroundSubColor: Color,
     @SerializedName("shadowColor") val shadowColor: Color
 )

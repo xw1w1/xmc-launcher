@@ -35,20 +35,7 @@ class WindowHandle(private var stage: Stage) {
     }
 
     fun setMica(boolean: Boolean) {
-        FluentLib.setMica(hwnd, true)
-        //if (boolean) {
-        //    if (!this.dwmSetIntValue(
-        //            DwmAttribute.DWMWA_SYSTEMBACKDROP_TYPE,
-        //            DwmAttribute.DWMSBT_MAINWINDOW.value
-                //        )) {
-        //        this.dwmSetBooleanValue(DwmAttribute.DWMWA_MICA_EFFECT, true)
-                //    }
-                //} else {
-        //    this.dwmSetIntValue(
-        //        DwmAttribute.DWMWA_SYSTEMBACKDROP_TYPE,
-        //        DwmAttribute.DWMSBT_DISABLE.value
-                //    )
-        //}
+        FluentLib.setMica(hwnd, boolean)
     }
 
     fun setWindowDragArea(startX: Int, endX: Int, height: Int) {
@@ -84,6 +71,10 @@ class WindowHandle(private var stage: Stage) {
      */
     fun setCaptionColor(color: Color): Boolean {
         return dwmSetIntValue(DwmAttribute.DWMWA_CAPTION_COLOR, rgb(color))
+    }
+
+    fun resetCaptionColor(): Boolean {
+        return dwmSetIntValue(DwmAttribute.DWMWA_CAPTION_COLOR, DwmAttribute.DWMWA_CAPTION_COLOR_DEFAULT.value)
     }
 
     /**

@@ -23,6 +23,8 @@ enum class DwmAttribute(val value: Int) {
      */
     DWMWA_CAPTION_COLOR(35),
 
+    DWMWA_CAPTION_COLOR_DEFAULT(-1),
+
     /**
      * Title text color. Accepts a COLORREF or a DWORD reference for pvAttribute,
      * 0x00_bb_gg_rr.

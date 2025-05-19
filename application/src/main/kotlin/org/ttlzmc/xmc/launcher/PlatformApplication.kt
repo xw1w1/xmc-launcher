@@ -1,7 +1,6 @@
 package org.ttlzmc.xmc.launcher
 
 import javafx.application.Application
-import javafx.beans.InvalidationListener
 import javafx.geometry.Insets
 import javafx.geometry.Pos
 import javafx.scene.Scene
@@ -18,14 +17,18 @@ abstract class PlatformApplication : Application(), Styled {
         rootStage = stage
         stage.title = "xmc Launcher"
         this.onStageCreated(stage)
-        this.openPage(WelcomePage)
+        this.applyNativeDecorations(stage)
+        this.openPage(WelcomePage).also { WelcomePage.createThemesBox() }
         attachElementsToAnchor(false)
         rootStage.maximizedProperty().addListener { _, _, new ->
             this.onMaximizedStateChanges(new)
         }
+
+        Styled.notifyThemeChanged(ThemeManager.getLauncherTheme())
     }
 
     abstract fun onStageCreated(stage: Stage)
+    abstract fun applyNativeDecorations(stage: Stage)
     abstract fun onMaximizedStateChanges(fs: Boolean)
 
     fun openModal(modal: Modal) {
@@ -47,6 +50,8 @@ abstract class PlatformApplication : Application(), Styled {
         lateinit var rootStage: Stage
         lateinit var arguments: ArgumentParser.ParsedRunArgs
         lateinit var navigationBar: NavigationBar
+
+        lateinit var instance: PlatformApplication
 
         val pageRoot: HBox = HBox().apply {
             alignment = Pos.TOP_LEFT
